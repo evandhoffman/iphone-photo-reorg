@@ -14,7 +14,7 @@ base_dir_target = '/lunix1/data1/public/Media/Gallery/Photos/'
 files = []
 
 whitelist_prefixes = ['IMG','DSC']
-whitelist_suffixes = ['JPG', 'HEIC']
+whitelist_suffixes = ['JPG', ]
 
 def file_list(root_dir):
     for r, d, f in os.walk(root_dir):
@@ -36,14 +36,14 @@ def move_file(source_file, timestamp):
     f = datetime.strptime(str(timestamp), '%Y:%m:%d %H:%M:%S')
     new_date_path = f.strftime('%Y/%Y-%m/')
     try:
-        os.makedirs(f"{base_dir_target}{new_date_path}")
+        os.makedirs(f"{base_dir_target}{new_date_path}", exist_ok=True)
         base_filename = os.path.basename(source_file)
         new_filename = f"{base_dir_target}{new_date_path}{f.strftime('%Y-%m-%d')}.{base_filename}"
         os.rename(source_file, new_filename)
         logger.info(f"Move file {source_file} to date {new_filename}")
         return True
     except Exception as e:
-        logger.error(f'Unable to move file: {e}')
+        logger.error(f'Unable to move file {source_file} -> {new_filename}: {e}')
         return False
 
 
